@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management Api</title>
+    
+    
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f5f6f8;
+        color: #222;
+        min-height: 100vh;
+        padding: 24px;
+    }
+
+    .container {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 18px 22px;
+        margin-bottom: 20px;
+    }
+
+    .logo-group { display: flex; align-items: center; gap: 12px; }
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #2563eb;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .logo-text h1 { font-size: 20px; font-weight: 600; color: #1f2937; }
+    .logo-text p { font-size: 13px; color: #6b7280; margin-top: 3px; }
+
+    .header-status {
+        font-size: 13px;
+        color: #237a43;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        padding: 7px 11px;
+        border-radius: 4px;
+    }
+
+    .pulse-dot { display: inline-block; width: 7px; height: 7px; background: #22c55e; border-radius: 50%; margin-right: 6px; }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .stat-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .stat-blue { background: #eff6ff; color: #2563eb; }
+    .stat-purple { background: #f5f3ff; color: #7c3aed; }
+    .stat-green { background: #f0fdf4; color: #16a34a; }
+
+    .stat-info h3 { font-size: 12px; color: #6b7280; font-weight: 500; }
+    .stat-info p { font-size: 21px; font-weight: 600; color: #1f2937; margin-top: 4px; }
+
+    .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .search-box { position: relative; flex: 1; }
+    .search-box i {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        font-style: normal;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 10px 12px 10px 34px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        color: #222;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .search-input:focus { border-color: #2563eb; }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 14px;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        background: #fff;
+    }
+
+    .btn-primary {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: #fff;
+    }
+
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary { color: #374151; }
+    .btn-secondary:hover { background: #f3f4f6; }
+
+    .table-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+
+    th {
+        background: #f8f9fa;
+        padding: 12px 16px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #555;
+        border-bottom: 1px solid #ddd;
+    }
+
+    td {
+        padding: 13px 16px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    tbody tr:hover { background: #fafafa; }
+
+    .user-cell { display: flex; align-items: center; gap: 10px; }
+    .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #e5e7eb;
+        color: #374151;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    .dept-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        background: #f3f4f6;
+        color: #4b5563;
+        border: 1px solid #e5e7eb;
+    }
+
+    .salary-text { font-weight: 500; color: #222; }
+
+    .action-btns { display: flex; gap: 6px; }
+
+    .btn-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: #fff;
+        color: #555;
+        font-size: 13px;
+    }
+
+    .btn-edit:hover { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+    .btn-delete:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+
+    .empty-state { padding: 50px 20px; text-align: center; color: #777; }
+    .empty-state i { display: block; font-style: normal; font-size: 28px; margin-bottom: 10px; }
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .modal {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        width: 90%;
+        max-width: 500px;
+        padding: 22px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.15);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+    .modal-header h2 { font-size: 18px; font-weight: 600; color: #222; }
+
+    .close-btn {
+        background: none;
+        border: none;
+        color: #777;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 13px; color: #444; margin-bottom: 5px; }
+
+    .form-input {
+        width: 100%;
+        padding: 9px 10px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        color: #222;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .form-input:focus { border-color: #2563eb; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .toast-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 2000;
+    }
+
+    .toast {
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 11px 14px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(0,0,0,.12);
+        min-width: 260px;
+        font-size: 14px;
+    }
+
+    .toast-success { border-left: 3px solid #16a34a; }
+    .toast-error { border-left: 3px solid #dc2626; }
+
+    @media (max-width: 800px) {
+        body { padding: 14px; }
+        .stats-grid { grid-template-columns: 1fr; }
+        header { align-items: flex-start; gap: 12px; flex-direction: column; }
+        .toolbar { flex-wrap: wrap; }
+        .search-box { min-width: 100%; }
+        .table-card { overflow-x: auto; }
+        table { min-width: 720px; }
+    }
+</style>
+
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-group">
+               
+                <div class="logo-text">
+                    <h1>Employee Management System</h1>
+                    <p>Employee Records</p>
+                </div>
+            </div>
+            <!-- <div class="header-status">
+                <div class="pulse-dot"></div>   
+                Backend connected
+            </div> -->
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                
+                <div class="stat-info">
+                    <h3>Total Employees</h3>
+                    <p id="totalEmployeesCount">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+               
+                <div class="stat-info">
+                    <h3>Avg. Salary</h3>
+                    <p id="avgSalary">$0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+               
+                <div class="stat-info">
+                    <h3>Top Department</h3>
+                    <p id="topDepartment">N/A</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="search-box">
+                
+                <input type="text" id="searchInput" class="search-input" placeholder="Search employee by name, email, or department...">
+            </div>
+            <button class="btn btn-secondary" onclick="fetchEmployees()">
+                 Refresh
+            </button>
+            <button class="btn btn-primary" onclick="openAddModal()">
+                + Add Employee
+            </button>
+        </div>
+
+        <!-- Employees Table -->
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Salary</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="employeeTableBody">
+                    <!-- Dynamic Rows Insertion -->
+                </tbody>
+            </table>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                No data
+                <p>No employees found. Click "Add Employee" to create your first record!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal-overlay" id="employeeModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Employee</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form id="employeeForm" onsubmit="handleFormSubmit(event)">
+                <input type="hidden" id="employeeId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" id="firstName" class="form-input" required placeholder="Nithin">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" id="lastName" class="form-input" required placeholder="Badduluri">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" required placeholder="nithin@gmail.com">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Department</label>
+                        <input type="text" id="department" class="form-input" required placeholder="Development">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Salary ($)</label>
+                        <input type="number" step="0.01" id="salary" class="form-input" required placeholder="75000">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">Save Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const API_BASE_URL = '/api/v1/employees';
+        let employeesData = [];
+
+        // Initial Load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchEmployees();
+
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filtered = employeesData.filter(emp => 
+                    (emp.firstName + ' ' + emp.lastName).toLowerCase().includes(searchTerm) ||
+                    emp.email.toLowerCase().includes(searchTerm) ||
+                    (emp.department && emp.department.toLowerCase().includes(searchTerm))
+                );
+                renderTable(filtered);
+            });
+        });
+
+        // Fetch All Employees (GET)
+        async function fetchEmployees() {
+            try {
+                const response = await fetch(API_BASE_URL);
+                if (!response.ok) throw new Error('Failed to load employees from API');
+                employeesData = await response.json();
+                renderTable(employeesData);
+                updateStats(employeesData);
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Render Table Rows
+        function renderTable(employees) {
+            const tableBody = document.getElementById('employeeTableBody');
+            const emptyState = document.getElementById('emptyState');
+            tableBody.innerHTML = '';
+
+            if (employees.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            employees.forEach(emp => {
+                const initials = (emp.firstName[0] || '') + (emp.lastName[0] || '');
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="user-cell">
+                            <div class="avatar">${initials.toUpperCase()}</div>
+                            <div>
+                                <strong>${emp.firstName} ${emp.lastName}</strong>
+                                <div style="font-size:0.8rem; color:var(--text-muted)">ID: #${emp.id}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${emp.email}</td>
+                    <td><span class="dept-badge">${emp.department || 'N/A'}</span></td>
+                    <td><span class="salary-text">$${Number(emp.salary || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-icon btn-edit" title="Edit" onclick="openEditModal(${emp.id})">
+                                Edit
+                            </button>
+                            <button class="btn-icon btn-delete" title="Delete" onclick="deleteEmployee(${emp.id})">
+                                Del
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update Summary Cards
+        function updateStats(employees) {
+            document.getElementById('totalEmployeesCount').innerText = employees.length;
+
+            if (employees.length === 0) {
+                document.getElementById('avgSalary').innerText = '$0';
+                document.getElementById('topDepartment').innerText = 'N/A';
+                return;
+            }
+
+            const totalSalary = employees.reduce((sum, e) => sum + (e.salary || 0), 0);
+            const avg = totalSalary / employees.length;
+            document.getElementById('avgSalary').innerText = '$' + Math.round(avg).toLocaleString('en-US');
+
+            const depts = {};
+            employees.forEach(e => {
+                if (e.department) {
+                    depts[e.department] = (depts[e.department] || 0) + 1;
+                }
+            });
+
+            let topDept = 'N/A';
+            let maxCount = 0;
+            for (const [dept, count] of Object.entries(depts)) {
+                if (count > maxCount) {
+                    maxCount = count;
+                    topDept = dept;
+                }
+            }
+            document.getElementById('topDepartment').innerText = topDept;
+        }
+
+        // Modal Handlers
+        function openAddModal() {
+            document.getElementById('modalTitle').innerText = 'Add New Employee';
+            document.getElementById('employeeId').value = '';
+            document.getElementById('employeeForm').reset();
+            document.getElementById('employeeModal').classList.add('active');
+        }
+
+        function openEditModal(id) {
+            const emp = employeesData.find(e => e.id === id);
+            if (!emp) return;
+
+            document.getElementById('modalTitle').innerText = 'Edit Employee details';
+            document.getElementById('employeeId').value = emp.id;
+            document.getElementById('firstName').value = emp.firstName;
+            document.getElementById('lastName').value = emp.lastName;
+            document.getElementById('email').value = emp.email;
+            document.getElementById('department').value = emp.department || '';
+            document.getElementById('salary').value = emp.salary || '';
+            document.getElementById('employeeModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('employeeModal').classList.remove('active');
+        }
+
+        // Form Submit (POST / PUT)
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('employeeId').value;
+            const payload = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                department: document.getElementById('department').value.trim(),
+                salary: parseFloat(document.getElementById('salary').value)
+            };
+
+            const isEdit = Boolean(id);
+            const url = isEdit ? `${API_BASE_URL}/${id}` : API_BASE_URL;
+            const method = isEdit ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorObj = await response.json().catch(() => ({}));
+                    throw new Error(errorObj.message || 'Operation failed');
+                }
+
+                showToast(isEdit ? 'Employee updated successfully!' : 'Employee added successfully!', 'success');
+                closeModal();
+                fetchEmployees();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Delete Employee (DELETE)
+        async function deleteEmployee(id) {
+            if (!confirm('Are you sure you want to delete this employee?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Failed to delete employee');
+
+                showToast('Employee record deleted successfully', 'success');
+                fetchEmployees();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Notification Toast
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span class="toast-icon">${type === 'success' ? '✓' : '!'}</span>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
