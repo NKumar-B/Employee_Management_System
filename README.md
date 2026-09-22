@@ -1,16 +1,12 @@
 # Employee Management System Backend
 
-[![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.4-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-
 A robust, enterprise-ready RESTful web service for **Employee Management**, built with **Java 17**, **Spring Boot 3.3.4**, **Spring Data JPA**, and **MySQL**. 
 
 This application provides complete CRUD (Create, Read, Update, Delete) capabilities for managing employee records, includes data validation and custom exception handling, and features an embedded interactive web dashboard served directly from static resources.
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
 - **Full Employee CRUD Operations**: Seamlessly create, retrieve, update, and delete employee records.
 - **DTO Pattern & Layered Architecture**: Clean separation of concerns across Controllers, Services, Repositories, Entities, and DTOs using Builder design pattern.
@@ -23,7 +19,7 @@ This application provides complete CRUD (Create, Read, Update, Delete) capabilit
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Component | Technology / Library |
 | :--- | :--- |
@@ -37,7 +33,7 @@ This application provides complete CRUD (Create, Read, Update, Delete) capabilit
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 backend/
@@ -76,7 +72,7 @@ backend/
 
 ---
 
-## ⚙️ Prerequisites & Setup
+## Prerequisites & Setup
 
 ### Prerequisites
 
@@ -99,7 +95,7 @@ spring.datasource.password=Root
 
 ---
 
-## 🏃 Running the Application
+## Running the Application
 
 ### Using Maven Wrapper (Windows)
 
@@ -125,7 +121,7 @@ The application will start on **port 8080** by default.
 
 ---
 
-## 🧪 Running Tests
+## Running Tests
 
 Execute the full suite of integration tests using the Maven wrapper:
 
@@ -137,7 +133,7 @@ This runs all MockMvc test cases in `EmployeeControllerIntegrationTests` coverin
 
 ---
 
-## 📡 REST API Reference
+## REST API Reference
 
 Base URL: `http://localhost:8080/api/v1/employees`
 
@@ -252,7 +248,7 @@ Employee deleted successfully!
 
 ---
 
-## 🎨 Interactive Web UI
+## Interactive Web UI
 
 The application includes an embedded dashboard accessible at [http://localhost:8080/](http://localhost:8080/).
 
